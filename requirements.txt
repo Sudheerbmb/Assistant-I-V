@@ -1,0 +1,4 @@
+Flask==2.3.2
+pyttsx3==2.90
+wikipedia-api==0.5.4
+wmi==1.4.1
