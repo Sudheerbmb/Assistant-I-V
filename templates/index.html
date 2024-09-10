@@ -86,36 +86,4 @@
                 };
 
                 recognition.onresult = function(event) {
-                    const command = event.results[0][0].transcript;
-                    document.getElementById('userInput').value = command;
-                    sendCommand(command);
-                };
-
-                recognition.onerror = function(event) {
-                    document.getElementById('response').innerText = `Error recognizing speech: ${event.error}`;
-                    console.error('Speech recognition error:', event.error);
-                };
-
-                recognition.onend = function() {
-                    document.getElementById('response').innerText = "Stopped listening.";
-                };
-            });
-
-            function sendCommand(command) {
-                fetch('/process', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({ 'user_input': command })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('response').innerText = data.response;
-                })
-                .catch(error => {
-                    document.getElementById('response').innerText = `Error sending command: ${error}`;
-                });
-            }
-        });
-    </script>
-</body>
-</html>
+                    const command =
