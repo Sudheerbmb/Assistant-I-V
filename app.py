@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template_string
 import pyttsx3
 import datetime
 import wikipedia
@@ -8,6 +8,7 @@ import wmi
 
 app = Flask(__name__)
 
+# Initialize pyttsx3 engine
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[0].id)
@@ -95,7 +96,90 @@ def process_query(query):
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    # HTML content as a string
+    html_content = '''
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Shinchan Assistant</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+            .container {
+                text-align: center;
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            input[type="text"] {
+                width: 80%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                margin-bottom: 10px;
+            }
+            button {
+                padding: 10px 20px;
+                border: none;
+                background-color: #007BFF;
+                color: white;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            button:hover {
+                background-color: #0056b3;
+            }
+            #response {
+                margin-top: 20px;
+                font-size: 1.2em;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Shinchan Assistant</h1>
+            <form id="commandForm">
+                <input type="text" id="user_input" name="user_input" placeholder="Enter command..." required>
+                <button type="submit">Submit</button>
+            </form>
+            <div id="response"></div>
+        </div>
+        <script>
+            document.getElementById('commandForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const userInput = document.getElementById('user_input').value;
+                fetch('/process', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        'user_input': userInput
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('response').innerText = data.response;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        </script>
+    </body>
+    </html>
+    '''
+    return render_template_string(html_content)
 
 @app.route('/process', methods=['POST'])
 def process():
