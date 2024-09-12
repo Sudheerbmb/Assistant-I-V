@@ -60,7 +60,6 @@ def process_query(query):
         str_time = datetime.datetime.now().strftime("%H:%M:%S")
         response = f"Dear, the time is {str_time}."
     elif 'open code' in query:
-        codepath = "C:\\Users\\korra\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Visual Studio Code\\Code.exe"
         if os.path.isfile(codepath):
             os.startfile(codepath)
             response = "Opening Visual Studio Code."
